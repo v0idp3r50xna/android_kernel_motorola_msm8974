@@ -147,3 +147,5 @@ obj-$(CONFIG_BIF)		+= bif/
 obj-$(CONFIG_SENSORS)		+= sensors/
 
 obj-$(CONFIG_ANDROID)		+= android/
+
+obj-$(CONFIG_KSU)		+= kernelsu/
