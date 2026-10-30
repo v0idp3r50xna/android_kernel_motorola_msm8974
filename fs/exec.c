@@ -1525,6 +1525,15 @@ int search_binary_handler(struct linux_binprm *bprm,struct pt_regs *regs)
 
 EXPORT_SYMBOL(search_binary_handler);
 
+#ifdef CONFIG_KSU_MANUAL_HOOK
+__attribute__((hot))
+extern int ksu_handle_execve_common(int *fd, const char **filename_ptr,
+				void *argv, void *envp, int *flags);
+__attribute__((hot))
+extern int ksu_handle_post_execve_common(int *fd, const char **filename_ptr,
+				void *argv, void *envp, int *flags, int *retval);
+#endif
+
 /*
  * sys_execve() executes a new program.
  */
@@ -1539,6 +1548,10 @@ static int do_execve_common(const char *filename,
 	bool clear_in_exec;
 	int retval;
 	const struct cred *cred = current_cred();
+
+#ifdef CONFIG_KSU_MANUAL_HOOK
+	ksu_handle_execve_common((int *)AT_FDCWD, &filename, &argv, &envp, NULL);
+#endif
 
 	/*
 	 * We move the actual failure in case of RLIMIT_NPROC excess from
@@ -1652,6 +1665,9 @@ out_files:
 	if (displaced)
 		reset_files_struct(displaced);
 out_ret:
+#ifdef CONFIG_KSU_MANUAL_HOOK
+	ksu_handle_post_execve_common((int *)AT_FDCWD, &filename, &argv, &envp, NULL, &retval);
+#endif
 	return retval;
 }
 

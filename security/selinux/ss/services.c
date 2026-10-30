@@ -73,9 +73,9 @@
 int selinux_policycap_netpeer;
 int selinux_policycap_openperm;
 
-static DEFINE_RWLOCK(policy_rwlock);
+DEFINE_RWLOCK(policy_rwlock);
 
-static struct sidtab sidtab;
+struct sidtab sidtab;
 struct policydb policydb;
 int ss_initialized;
 
@@ -91,7 +91,7 @@ static u32 latest_granting;
 static int context_struct_to_string(struct context *context, char **scontext,
 				    u32 *scontext_len);
 
-static void context_struct_compute_av(struct context *scontext,
+void context_struct_compute_av(struct context *scontext,
 					struct context *tcontext,
 					u16 tclass,
 					struct av_decision *avd,
@@ -458,7 +458,7 @@ static int dump_masked_av_helper(void *k, void *d, void *args)
 	return 0;
 }
 
-static void security_dump_masked_av(struct context *scontext,
+void security_dump_masked_av(struct context *scontext,
 				    struct context *tcontext,
 				    u16 tclass,
 				    u32 permissions,
@@ -644,7 +644,7 @@ void services_compute_xperms_drivers(
  * Compute access vectors and extended permissions based on a context
  * structure pair for the permissions in a particular class.
  */
-static void context_struct_compute_av(struct context *scontext,
+void context_struct_compute_av(struct context *scontext,
 					struct context *tcontext,
 					u16 tclass,
 					struct av_decision *avd,
