@@ -2752,5 +2752,9 @@ static inline void inode_has_no_xattr(struct inode *inode)
 		inode->i_flags |= S_NOSEC;
 }
 
+struct filename {
+	const char *name;
+};
+
 #endif /* __KERNEL__ */
 #endif /* _LINUX_FS_H */
